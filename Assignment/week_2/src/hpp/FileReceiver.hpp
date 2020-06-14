@@ -1,25 +1,44 @@
-/// Class FileReceiver Interface.
+/***************************************************************************//**
+ * Class FileReceiver Interface.
+ ******************************************************************************/
+
+#ifndef _FILERECEIVER_HPP_
+#define _FILERECEIVER_HPP_
 
 #include "Encryptor.hpp"
 #include "Compressor.hpp"
+#include <sys/socket.h> 
+#include <arpa/inet.h> 
+#include <unistd.h> 
+using std::string;
+
 class FileReceiver
 {
 private:
-    /// Instances to compress and encrypt files.
-    Compressor* compressor; ///< Instance to decompress file.
-    Encryptor* encryptor;   ///< Instance to decrypte file.
+    Compressor* compressor; /**< Instance to decompress file. */
+    Encryptor* encryptor;   /**< Instance to decrypt file. */
 
-    /// This function initials server.
-    int start();
+    /** A private member function.
+    *   Start server.
+    */
+    int start(int PORT);
 
-    /// This function saves compressed and encrypted file on server.
+    /** A private member function.
+    *   Save compressed and encrypted file on server.
+    */
     int save_on_server();
 public:
-    /// Constructor of this class. 
+    /** A constructor
+    *   Get Compressor* and Encryptor* instances.
+    */ 
     FileReceiver();
 
-    /// This function decryptes file and decompresses the 
-    /// decrypted file on server after receiving it.
-    /// Return value is name of the received file.
+    /** A public member function.
+    *   Decryptes and decompresses file and save on server.
+    *   Return value is file name.
+    *   Multi thread reciever.
+    */
     std::string receive();
 };
+
+#endif

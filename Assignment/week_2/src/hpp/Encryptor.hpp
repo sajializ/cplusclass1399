@@ -1,21 +1,35 @@
-/// Class Encryptor Interface.
+/***************************************************************************//**
+ * Class Encryptor Interface.
+ ******************************************************************************/
+
+#ifndef _ENCRYPTOR_HPP_
+#define _ENCRYPTOR_HPP_
+
 #include <string>
+using std::string;
 
 class Encryptor
 {
 private:
-    /// Constructor of this class.
+    /** A private constructor
+    *   Handle singleton.
+    */ 
     Encryptor();
 
-    static Encryptor* instance; ///< Instance of Encryptor to avoid making multiple objects.
+    static Encryptor* instance; /**< Instance of Encryptor to avoid making multiple objects. */
     static Encryptor* get_instance();
     
-    /// This function encrypts a specific file.
-    /// Return value is name of the encrypted file.
-    static std::string encrypt(std::string filename /**< [in] Name of the file to encrypt. */);
+public:
+    /** A public member function.
+    *   Encrypt a specific file and return the encrypted file name.
+    */
+    static string encrypt(string filename /**< [in] Name of the file to encrypt. */);
     
-    /// This function decrypts a specific file.
-    /// Return value is name of the decrypted file.
-    static std::string decrypt(std::string filename /**< [out] Name of the file to decrypt. */);
+    /** A public member function.
+    *   Dncrypt a specific file and return the decrypted file name.
+    */
+    static string decrypt(string filename /**< [out] Name of the file to decrypt. */);
 };
 Encryptor *Encryptor::instance = NULL;
+
+#endif

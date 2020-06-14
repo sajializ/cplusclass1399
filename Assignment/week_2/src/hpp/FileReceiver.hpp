@@ -14,30 +14,31 @@
 class FileReceiver
 {
 private:
+    int PORT; /**< The Port that server listens to. */
     Compressor* compressor; /**< Instance to decompress file. */
     Encryptor* encryptor;   /**< Instance to decrypt file. */
 
     /** Start server.
-     * If starting server was successful returns 1 else throw exception.
-     * @param {int} PORT - Port to listen.
+     * If starting server was successful returns true else throw STARTING FAILED.
     */
-    int start(int PORT);
+    const bool start();
 
     /** Save compressed and encrypted file on server.
-     *  If saving on server was successful returns 1 else throw exception.
+     *  If saving on server was successful returns true else throw SAVING_FAILED.
     */
-    int save_on_server();
+    const bool save_on_server();
 
 public:
     /** Get Compressor* and Encryptor* instances.
+     *  Set PORT
     */ 
-    FileReceiver();
+    FileReceiver(int port);
 
     /** Decryptes and decompresses file and save on server.
     *   Return value is file name.
     *   Multi thread reciever.
     */
-    std::string receive();
+    const std::string receive() noexcept;
 };
 
 #endif

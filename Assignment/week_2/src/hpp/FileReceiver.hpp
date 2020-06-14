@@ -10,7 +10,6 @@
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
 #include <unistd.h> 
-using std::string;
 
 class FileReceiver
 {
@@ -18,23 +17,23 @@ private:
     Compressor* compressor; /**< Instance to decompress file. */
     Encryptor* encryptor;   /**< Instance to decrypt file. */
 
-    /** A private member function.
-    *   Start server.
+    /** Start server.
+     * If starting server was successful returns 1 else throw exception.
+     * @param {int} PORT - Port to listen.
     */
     int start(int PORT);
 
-    /** A private member function.
-    *   Save compressed and encrypted file on server.
+    /** Save compressed and encrypted file on server.
+     *  If saving on server was successful returns 1 else throw exception.
     */
     int save_on_server();
+
 public:
-    /** A constructor
-    *   Get Compressor* and Encryptor* instances.
+    /** Get Compressor* and Encryptor* instances.
     */ 
     FileReceiver();
 
-    /** A public member function.
-    *   Decryptes and decompresses file and save on server.
+    /** Decryptes and decompresses file and save on server.
     *   Return value is file name.
     *   Multi thread reciever.
     */

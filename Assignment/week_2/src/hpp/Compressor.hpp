@@ -5,29 +5,26 @@
 #define _COMPRESSOR_HPP_
 
 #include <string>
-using std::string;
 
 class Compressor
 {
 private:
-    /** A private constructor
-    *   Handle singleton.
-    */ 
     Compressor();
 
     static Compressor* instance; /**< Instance of Compressor to avoid making multiple objects. */
+    
+public:
     static Compressor* get_instance();
     
-    /** A public member function.
-    *   Compress a specific file and return the compressed file name.
+    /** Compress a specific file and return the compressed file name.
+     *  @param {string} filename - Name of the file.
     */
-    static string compress(string filename /**< [in] Name of the file to compress. */);
+    static std::string compress(std::string filename);
     
-    /** A public member function.
-    *   Decompress a specific file and return the decompressed file name.
+    /** Decompress a specific file and return the decompressed file name.
+     *  @param {string} filename - Name of the file.
     */
-    static string decompress(string filename /**< [out] Name of the file to decompress. */);
+    static std::string decompress(std::string filename);
 };
-Compressor *Compressor::instance = NULL;
 
 #endif

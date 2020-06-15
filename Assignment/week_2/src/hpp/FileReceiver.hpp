@@ -19,14 +19,14 @@ private:
     Encryptor* encryptor;   /**< Instance to decrypt file. */
 
     /** Start server.
-     * If starting server was successful returns true else throw STARTING FAILED.
+     *  If starting server was successful returns true else throw STARTING FAILED.
     */
-    const bool start();
+    bool start() const;
 
     /** Save compressed and encrypted file on server.
      *  If saving on server was successful returns true else throw SAVING_FAILED.
     */
-    const bool save_on_server();
+    bool save_on_server() const;
 
 public:
     /** Get Compressor* and Encryptor* instances.
@@ -38,7 +38,7 @@ public:
     *   Return value is file name.
     *   Multi thread reciever.
     */
-    const std::string receive() noexcept;
+    std::string receive() const noexcept;
 };
 
 #endif

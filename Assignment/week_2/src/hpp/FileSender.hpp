@@ -24,13 +24,13 @@ private:
     /** Initial socket.
      *  If initialing was successful returns true else throw CONNECTION_FAILED.
     */
-    const bool connect_to_server();
+    bool connect_to_server() const;
     
     /** Send compressed and encrypted file to server.
      *  If sending file was successful returns true else throw SENDING_FAILED.
      *  @param {string} filename - Name of the file.
     */
-    const bool send_to_server(std::string filename);
+    bool send_to_server(std::string filename) const;
 
 public:
     /** Get Compressor* and Encryptor* instances.
@@ -44,7 +44,7 @@ public:
      *  Returns true on success. Else return false and log the problem.
      *  @param {string} filename - Name of the file.
     */
-    const bool send_file(std::string filename) noexcept;
+    bool send_file(std::string filename) const noexcept;
 };
 
 #endif

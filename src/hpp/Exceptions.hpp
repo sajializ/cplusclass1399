@@ -7,15 +7,15 @@ class CONNECTION_FAILED: public std::exception
 {
     virtual const char* what() const throw()
     {
-        return "Failed to connect to the server";
+        return "Failed to connect to the server.";
     }
 };
 
-class SENDING_FAILED: public std::exception
+class NOT_EXISTED: public std::exception
 {
     virtual const char* what() const throw()    
     {
-        return "Failed to send data to the server";
+        return "File does not exist.";
     }
 };
 
@@ -23,7 +23,7 @@ class STARTING_FAILED: public std::exception
 {
     virtual const char* what() const throw()    
     {
-        return "Failed to start the server";
+        return "Failed to start the server.";
     }
 };
 
@@ -31,7 +31,15 @@ class SAVING_FAILED: public std::exception
 {
     virtual const char* what() const throw()    
     {
-        return "Failed to save file on server";
+        return "Failed to save file on server.";
+    }
+};
+
+class BAD_REQUEST: public std::exception
+{
+    virtual const char* what() const throw()    
+    {
+        return "Bad request.";
     }
 };
 #endif

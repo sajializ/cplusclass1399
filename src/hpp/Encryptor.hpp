@@ -15,17 +15,17 @@ private:
     static Encryptor* instance; /**< Instance of Encryptor to avoid making multiple objects. */
        
 public:
-    static Encryptor* get_instance() const noexcept;
+    static Encryptor* get_instance() noexcept;
 
     /** Encrypt a specific file and return the encrypted file name.
      *  @param {string} filename - Name of the file.
     */
-    static std::string encrypt(std::string filename) const;
+    static std::string encrypt(std::string filename);
     
     /** Dncrypt a specific file and return the decrypted file name.
      *  @param {string} filename - Name of the file.
     */
-    static std::string decrypt(std::string filename) const;
+    static std::string decrypt(std::string filename);
 };
 
 #endif

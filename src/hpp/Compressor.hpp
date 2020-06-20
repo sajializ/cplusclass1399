@@ -5,12 +5,14 @@
 #define _COMPRESSOR_HPP_
 
 #include <string>
+#include <iostream>
+#include <vector>
+#include "Exceptions.hpp"
 
 class Compressor
 {
 private:
     Compressor();
-
     static Compressor* instance; /**< Instance of Compressor to avoid making multiple objects. */
     
 public:
@@ -19,12 +21,17 @@ public:
     /** Compress a specific file and return the compressed file name.
      *  @param {string} filename - Name of the file.
     */
-    static std::string compress(std::string filename);
+    std::string compress(std::string filename);
     
     /** Decompress a specific file and return the decompressed file name.
      *  @param {string} filename - Name of the file.
     */
-    static std::string decompress(std::string filename);
+    void decompress(std::string filename);
+
+    /** Delete file.
+     *  @param {string} filename - Nacompresse of the file.
+    */
+    void destruct(std::string filename);
 };
 
 #endif

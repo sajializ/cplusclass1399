@@ -24,7 +24,7 @@ bool FileReceiver::initial_server()
 	std::cout << "-> Starting server." << std::endl;
     return true;
 }
-bool FileReceiver::save_on_server(const int thread_socket)
+std::string FileReceiver::save_on_server(const int thread_socket)
 {
 	int valread;
 	std::string filename;
@@ -34,21 +34,25 @@ bool FileReceiver::save_on_server(const int thread_socket)
 	{
 		throw BAD_REQUEST {}; 
 	}
-	filename = std::to_string(thread_socket) + "_Copy_of_" + (std::string)buffer;
+	filename = (std::string)buffer;
 	FILE *fp = fopen(filename.c_str(), "wb");
 	while((valread = read(thread_socket ,buffer, 1024)) > 0)
 		fwrite(buffer, 1, valread, fp);
 	fclose(fp);
 	std::cout << "-> Receiving "<< filename <<" successful." << std::endl;
-    return true;
+    return filename;
 }
 bool FileReceiver::receive(const int thread_socket) noexcept
 {
+	std::string filename;
 	try
 	{
+		// Save
+		filename = this->save_on_server(thread_socket);
 		// Decrypt
 		// Decompress
-		this->save_on_server(thread_socket);
+		(Compressor::get_instance())->decompress(filename);
+		(Compressor::get_instance())->destruct(filename);
 		return true;
 	}
 	catch(const std::exception& e)

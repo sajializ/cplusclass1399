@@ -35,9 +35,10 @@ private:
     bool initial_server();
 
     /** Save compressed and encrypted file on server.
-     *  If saving on server was successful returns true else throw SAVING_FAILED.
+     *  If saving on server was successful returns name of the file
+     *  else throw SAVING_FAILED.
     */
-    bool save_on_server(const int thread_socket);
+    std::string save_on_server(const int thread_socket);
 
     /** Decryptes and decompresses file and save on server.
     *   Return value is true on success. Else it is false.

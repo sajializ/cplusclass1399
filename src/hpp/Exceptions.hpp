@@ -42,4 +42,12 @@ class BAD_REQUEST: public std::exception
         return "Bad request.";
     }
 };
+
+class INVALID_NAME: public std::exception
+{
+    virtual const char* what() const throw()    
+    {
+        return "Invalid name of the file.";
+    }
+};
 #endif

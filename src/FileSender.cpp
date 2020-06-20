@@ -40,12 +40,16 @@ bool FileSender::send_to_server(std::string filename) const
 }
 bool FileSender::send_file(std::string filename) noexcept
 {
+    std::string cn;
     try
     {
         // Compress
+        cn = (Compressor::get_instance())->compress(filename);
         // Encrypt
+        // Send
         this->connect_to_server();
-        this->send_to_server(filename);
+        this->send_to_server(cn);
+        (Compressor::get_instance())->destruct(cn);
         std::cout << "File sent successfuly." << std::endl;
     }
     catch(const std::exception& e)
@@ -57,8 +61,8 @@ bool FileSender::send_file(std::string filename) noexcept
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
     FileSender f("127.0.0.1",9090);
-    f.send_file("main.pdf");
+    f.send_file(std::string(argv[1]));
 }

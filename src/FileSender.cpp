@@ -23,16 +23,22 @@ bool FileSender::connect_to_server()
 }
 bool FileSender::send_to_server(std::string filename) const
 {
-    char sendbuffer[1024] = {};
+    char sendbuffer[65] = {};
+    unsigned char* encrypted;
     int num;
-    FILE *fp = fopen(filename.c_str(), "rb");
+    FILE *fp = fopen(filename.c_str(), "r");
     if(fp == nullptr)
     {
         throw NOT_EXISTED {};
     }
     send(sock, filename.c_str(), filename.size(), 0);
-	while((num = fread(sendbuffer, 1, sizeof(sendbuffer), fp)) > 0)
+    int len;
+	while((num = fread(sendbuffer, 1, 64, fp)) > 0)
 	{
+        // This Part is for encryptring data
+//      encrypted = Encryptor::get_instance()->encrypt(sendbuffer, len);
+//      send(sock, encrypted, len, 0);
+//      memset(sendbuffer, '\0', sizeof(sendbuffer));
         send(sock, sendbuffer, num, 0);
     }
 	fclose(fp); 
@@ -43,10 +49,7 @@ bool FileSender::send_file(std::string filename) noexcept
     std::string cn;
     try
     {
-        // Compress
         cn = (Compressor::get_instance())->compress(filename);
-        // Encrypt
-        // Send
         this->connect_to_server();
         this->send_to_server(cn);
         (Compressor::get_instance())->destruct(cn);

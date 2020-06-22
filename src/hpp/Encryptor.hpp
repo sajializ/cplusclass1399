@@ -6,6 +6,13 @@
 #define _ENCRYPTOR_HPP_
 
 #include <string>
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include "encrypt.hpp"
+#include "decrypt.hpp"
+#include "Exceptions.hpp"
 
 class Encryptor
 {
@@ -17,15 +24,17 @@ private:
 public:
     static Encryptor* get_instance() noexcept;
 
-    /** Encrypt a specific file and return the encrypted file name.
-     *  @param {string} filename - Name of the file.
+    /** Encrypt a specific message and return the encrypted result.
+     *  @param {char[]} message - message to encrypt.
+     *  @param {int} len - length of encrypted message.
     */
-    static std::string encrypt(std::string filename);
+    unsigned char* encrypt(char message[], int& len);
     
-    /** Dncrypt a specific file and return the decrypted file name.
-     *  @param {string} filename - Name of the file.
+    /** Decrypt a specific message and return the decrypted result.
+     *  @param {char*} msg - message to decrypt.
+     *  @param {int} len - length of decrypted message.
     */
-    static std::string decrypt(std::string filename);
+    unsigned char* decrypt(char* msg, int& len);
 };
 
 #endif

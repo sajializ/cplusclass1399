@@ -50,4 +50,12 @@ class INVALID_NAME: public std::exception
         return "Invalid name of the file.";
     }
 };
+
+class INVALID_KEYFILE_NAME: public std::exception
+{
+    virtual const char* what() const throw()    
+    {
+        return "Invalid key file name.";
+    }
+};
 #endif

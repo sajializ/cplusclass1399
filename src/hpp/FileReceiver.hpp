@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <vector>
 #include "Encryptor.hpp"
 #include "Compressor.hpp"
 #include "Exceptions.hpp"

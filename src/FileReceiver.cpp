@@ -26,18 +26,26 @@ bool FileReceiver::initial_server()
 }
 std::string FileReceiver::save_on_server(const int thread_socket)
 {
-	int valread;
+	int valread, bread;
 	std::string filename;
     char buffer[1024] = {0}; 
+	unsigned char* decrypted;
 	read(thread_socket, buffer, 1024);
 	if(((std::string)buffer).size() == 0)
 	{
 		throw BAD_REQUEST {}; 
 	}
 	filename = (std::string)buffer;
-	FILE *fp = fopen(filename.c_str(), "wb");
+	FILE *fp = fopen(filename.c_str(), "w");
+	int len;
 	while((valread = read(thread_socket ,buffer, 1024)) > 0)
+	{	
+		// This part is for decrypting data
+//		decrypted = Encryptor::get_instance()->decrypt(buffer, len);
+//		fwrite(decrypted, 1, strlen((const char *)decrypted), fp);
+//		delete[] decrypted;
 		fwrite(buffer, 1, valread, fp);
+	}
 	fclose(fp);
 	std::cout << "-> Receiving "<< filename <<" successful." << std::endl;
     return filename;
@@ -47,10 +55,7 @@ bool FileReceiver::receive(const int thread_socket) noexcept
 	std::string filename;
 	try
 	{
-		// Save
 		filename = this->save_on_server(thread_socket);
-		// Decrypt
-		// Decompress
 		(Compressor::get_instance())->decompress(filename);
 		(Compressor::get_instance())->destruct(filename);
 		return true;
@@ -63,6 +68,7 @@ bool FileReceiver::receive(const int thread_socket) noexcept
 }
 void FileReceiver::start() noexcept
 {
+//	std::vector<std::thread*> ts;
 	try
 	{
 		this->initial_server();
@@ -84,15 +90,19 @@ void FileReceiver::start() noexcept
 				throw SAVING_FAILED {};
 			}
 			this->receive(new_socket);
-			// We have segmantation fault here :((((
+			// This part is for multi threading.
 			//std::thread* t = new std::thread(&FileReceiver::receive, this, new_socket);
-			//t->join();
+			//ts.push_back(t);
 		}
 		catch(const std::exception& e)
 		{
 			std::cout << "-> " << e.what() << std::endl;
 		}
 	}
+/*	for(int i = 0; i < ts.size();i++)
+	{
+		ts[i]->join();
+	}*/
 	
 }
 int main()

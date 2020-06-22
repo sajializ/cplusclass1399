@@ -23,23 +23,19 @@ bool FileSender::connect_to_server()
 }
 bool FileSender::send_to_server(std::string filename) const
 {
-    char sendbuffer[65] = {};
-    unsigned char* encrypted;
-    int num;
+    char sendbuffer[1025] = {};
+    unsigned char* encrypted = nullptr;
+    int num = -1;
     FILE *fp = fopen(filename.c_str(), "r");
     if(fp == nullptr)
-    {
         throw NOT_EXISTED {};
-    }
     send(sock, filename.c_str(), filename.size(), 0);
-    int len;
-	while((num = fread(sendbuffer, 1, 64, fp)) > 0)
+    int len = 0;
+	while((num = fread(sendbuffer, 1, 1024, fp)) > 0)
 	{
-        // This Part is for encryptring data
-//      encrypted = Encryptor::get_instance()->encrypt(sendbuffer, len);
-//      send(sock, encrypted, len, 0);
-//      memset(sendbuffer, '\0', sizeof(sendbuffer));
-        send(sock, sendbuffer, num, 0);
+        encrypted = Encryptor::get_instance()->encrypt(sendbuffer, len);
+        send(sock, encrypted, len, 0);
+        memset(sendbuffer, '\0', sizeof(sendbuffer));
     }
 	fclose(fp); 
     return true; 
@@ -49,10 +45,10 @@ bool FileSender::send_file(std::string filename) noexcept
     std::string cn;
     try
     {
-        cn = (Compressor::get_instance())->compress(filename);
+        // TODO compress file.
+        // cn = (Compressor::get_instance())->compress(filename);
         this->connect_to_server();
-        this->send_to_server(cn);
-        (Compressor::get_instance())->destruct(cn);
+        this->send_to_server(filename);
         std::cout << "File sent successfuly." << std::endl;
     }
     catch(const std::exception& e)

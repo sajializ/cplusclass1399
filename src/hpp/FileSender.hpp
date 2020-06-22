@@ -16,6 +16,9 @@
 #include "Compressor.hpp"
 #include "Exceptions.hpp"
 
+#define ENCRYPTION_ON 1
+#define ENCRYPTION_OFF 0
+
 class FileSender
 {
 private:

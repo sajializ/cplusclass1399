@@ -10,8 +10,6 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
-#include "encrypt.hpp"
-#include "decrypt.hpp"
 #include "Exceptions.hpp"
 
 class Encryptor
@@ -28,13 +26,13 @@ public:
      *  @param {char[]} message - message to encrypt.
      *  @param {int} len - length of encrypted message.
     */
-    unsigned char* encrypt(char message[], int& len);
+    unsigned char* encrypt(char message[], int& len) const;
     
     /** Decrypt a specific message and return the decrypted result.
      *  @param {char*} msg - message to decrypt.
      *  @param {int} len - length of decrypted message.
     */
-    unsigned char* decrypt(char* msg, int& len);
+    unsigned char* decrypt(char* msg, int& len) const;
 };
 
 #endif

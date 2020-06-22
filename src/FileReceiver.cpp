@@ -24,40 +24,35 @@ bool FileReceiver::initial_server()
 	std::cout << "-> Starting server." << std::endl;
     return true;
 }
-std::string FileReceiver::save_on_server(const int thread_socket)
+std::string FileReceiver::save_on_server(const int thread_socket) const
 {
-	int valread, bread;
+	int valread = 0;
 	std::string filename;
     char buffer[1024] = {0}; 
 	unsigned char* decrypted;
 	read(thread_socket, buffer, 1024);
-	if(((std::string)buffer).size() == 0)
-	{
+	if((static_cast<std::string>(buffer).size() == 0))
 		throw BAD_REQUEST {}; 
-	}
-	filename = (std::string)buffer;
+	filename = static_cast<std::string>(buffer);
 	FILE *fp = fopen(filename.c_str(), "w");
-	int len;
+	int len = 0;
 	while((valread = read(thread_socket ,buffer, 1024)) > 0)
-	{	
-		// This part is for decrypting data
-//		decrypted = Encryptor::get_instance()->decrypt(buffer, len);
-//		fwrite(decrypted, 1, strlen((const char *)decrypted), fp);
-//		delete[] decrypted;
-		fwrite(buffer, 1, valread, fp);
+	{
+		decrypted = Encryptor::get_instance()->decrypt(buffer, len);
+		fwrite(decrypted, 1, strlen((const char *)decrypted), fp);
+		delete[] decrypted;
 	}
 	fclose(fp);
-	std::cout << "-> Receiving "<< filename <<" successful." << std::endl;
+	std::cout << "-> Receiving " << filename <<" successful." << std::endl;
     return filename;
 }
-bool FileReceiver::receive(const int thread_socket) noexcept
+bool FileReceiver::receive(const int thread_socket) const noexcept
 {
 	std::string filename;
 	try
 	{
 		filename = this->save_on_server(thread_socket);
-		(Compressor::get_instance())->decompress(filename);
-		(Compressor::get_instance())->destruct(filename);
+		// TODO Decompress file.
 		return true;
 	}
 	catch(const std::exception& e)
@@ -66,11 +61,12 @@ bool FileReceiver::receive(const int thread_socket) noexcept
 		return false;
 	}
 }
-void FileReceiver::start() noexcept
+void FileReceiver::start(int multi_thread_option = MULTI_THREAD_OFF) noexcept
 {
-//	std::vector<std::thread*> ts;
+	std::vector<std::thread*> ts;
 	try
 	{
+		this->MULTI_THREAD = multi_thread_option;
 		this->initial_server();
 	}
 	catch(const std::exception& e)
@@ -86,27 +82,43 @@ void FileReceiver::start() noexcept
 			std::cout << "-> Waiting..." << std::endl;
     		int new_socket = accept(server_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen);
 			if(new_socket < 0)
-			{
 				throw SAVING_FAILED {};
+			if(this->MULTI_THREAD == MULTI_THREAD_ON)
+			{
+				std::thread* t = new std::thread(&FileReceiver::receive, this, new_socket);
+				ts.push_back(t);
 			}
-			this->receive(new_socket);
-			// This part is for multi threading.
-			//std::thread* t = new std::thread(&FileReceiver::receive, this, new_socket);
-			//ts.push_back(t);
+			else
+				this->receive(new_socket);
 		}
 		catch(const std::exception& e)
 		{
 			std::cout << "-> " << e.what() << std::endl;
 		}
 	}
-/*	for(int i = 0; i < ts.size();i++)
+	if(this->MULTI_THREAD == MULTI_THREAD_ON)
 	{
-		ts[i]->join();
-	}*/
+		for(int i = 0; i < ts.size();i++)
+			ts[i]->join();
+	}
 	
 }
 int main()
 {
     FileReceiver s(9090);
-	s.start();
+	std::cout << "Select Multi thread option:" << std::endl;
+	std::cout << "0 => OFF" << std::endl;
+	std::cout << "1 => ON" << std::endl;
+	int option = 0;
+	std::cin >> option;
+	try
+	{
+		s.start(option);
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	
+	
 }
